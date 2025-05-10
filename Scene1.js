@@ -12,6 +12,7 @@ class Scene1 extends Phaser.Scene {
         this.load.image('outline', 'assets/images/outline.png'); // 加載 outline 圖片
         this.load.image('axis', 'assets/images/axis.png'); // 加載 axis 圖片
         this.load.audio('gameBGM', 'assets/audio/gameBGM.mp3'); // 加載背景音樂
+        this.load.audio('puzzle', 'assets/audio/puzzle.mp3'); // 加載拼圖音效
     }
 
     create() {
@@ -28,21 +29,21 @@ class Scene1 extends Phaser.Scene {
         const fixedPieces = [1, 4, 5, 7, 8, 13, 15, 16, 18];
         const positions = [...Array(20).keys()].map(i => i + 1); // [1, 2, ..., 20]
         const fixedPositions = {
-            1: {x: 100, y: 100}, 4: {x: 340, y: 100}, 5: {x: 420, y: 100},
-            7: {x: 180, y: 180}, 8: {x: 260, y: 180}, 13: {x: 260, y: 260},
-            15: {x: 420, y: 260}, 16: {x: 100, y: 340}, 18: {x: 260, y: 340}
+            1: { x: 100, y: 100 }, 4: { x: 340, y: 100 }, 5: { x: 420, y: 100 },
+            7: { x: 180, y: 180 }, 8: { x: 260, y: 180 }, 13: { x: 260, y: 260 },
+            15: { x: 420, y: 260 }, 16: { x: 100, y: 340 }, 18: { x: 260, y: 340 }
         };
 
         const correctPositions = {
-            2: {x: 180, y: 100}, 3: {x: 260, y: 100}, 6: {x: 100, y: 180}, 9: {x: 340, y: 180}, 10: {x: 420, y: 180}, 
-            11: {x: 100, y: 260}, 12: {x: 180, y: 260}, 14: {x: 340, y: 260}, 17: {x: 180, y: 340}, 19: {x: 340, y: 340}, 
-            20: {x: 420, y: 340}
+            2: { x: 180, y: 100 }, 3: { x: 260, y: 100 }, 6: { x: 100, y: 180 }, 9: { x: 340, y: 180 }, 10: { x: 420, y: 180 },
+            11: { x: 100, y: 260 }, 12: { x: 180, y: 260 }, 14: { x: 340, y: 260 }, 17: { x: 180, y: 340 }, 19: { x: 340, y: 340 },
+            20: { x: 420, y: 340 }
         };
 
         const snapPositions = [
-            {x: 180, y: 100}, {x: 260, y: 100}, {x: 340, y: 100}, {x: 100, y: 180}, {x: 340, y: 180},
-            {x: 420, y: 180}, {x: 100, y: 260}, {x: 180, y: 260}, {x: 340, y: 260}, {x: 180, y: 340},
-            {x: 340, y: 340}, {x: 420, y: 340}
+            { x: 180, y: 100 }, { x: 260, y: 100 }, { x: 340, y: 100 }, { x: 100, y: 180 }, { x: 340, y: 180 },
+            { x: 420, y: 180 }, { x: 100, y: 260 }, { x: 180, y: 260 }, { x: 340, y: 260 }, { x: 180, y: 340 },
+            { x: 340, y: 340 }, { x: 420, y: 340 }
         ];
 
         // 打亂 positions 陣列，排除固定拼圖塊
@@ -54,7 +55,7 @@ class Scene1 extends Phaser.Scene {
 
         // 放置固定拼圖塊
         for (let pieceNumber of fixedPieces) {
-            let {x, y} = fixedPositions[pieceNumber];
+            let { x, y } = fixedPositions[pieceNumber];
             let puzzlePiece = this.add.image(x, y, `puzzle${pieceNumber}`).setOrigin(0, 0);
             puzzlePiece.setDisplaySize(gridSize, gridSize); // 縮小拼圖塊
             this.puzzles.push({ pieceNumber, puzzlePiece, fixed: true });
@@ -97,6 +98,9 @@ class Scene1 extends Phaser.Scene {
             if (minDist < 40) { // 設定吸附距離閾值
                 gameObject.x = closest.x;
                 gameObject.y = closest.y;
+
+                // 撥放拼圖音效
+                this.sound.play('puzzle', { volume: 1.2 });
             }
         });
 
@@ -118,10 +122,10 @@ class Scene1 extends Phaser.Scene {
 
     checkSolution() {
         const correctPositions = {
-            1: {x: 100, y: 100}, 2: {x: 180, y: 100}, 3: {x: 260, y: 100}, 4: {x: 340, y: 100}, 5: {x: 420, y: 100},
-            6: {x: 100, y: 180}, 7: {x: 180, y: 180}, 8: {x: 260, y: 180}, 9: {x: 340, y: 180}, 10: {x: 420, y: 180},
-            11: {x: 100, y: 260}, 12: {x: 180, y: 260}, 13: {x: 260, y: 260}, 14: {x: 340, y: 260}, 15: {x: 420, y: 260},
-            16: {x: 100, y: 340}, 17: {x: 180, y: 340}, 18: {x: 260, y: 340}, 19: {x: 340, y: 340}, 20: {x: 420, y: 340}
+            1: { x: 100, y: 100 }, 2: { x: 180, y: 100 }, 3: { x: 260, y: 100 }, 4: { x: 340, y: 100 }, 5: { x: 420, y: 100 },
+            6: { x: 100, y: 180 }, 7: { x: 180, y: 180 }, 8: { x: 260, y: 180 }, 9: { x: 340, y: 180 }, 10: { x: 420, y: 180 },
+            11: { x: 100, y: 260 }, 12: { x: 180, y: 260 }, 13: { x: 260, y: 260 }, 14: { x: 340, y: 260 }, 15: { x: 420, y: 260 },
+            16: { x: 100, y: 340 }, 17: { x: 180, y: 340 }, 18: { x: 260, y: 340 }, 19: { x: 340, y: 340 }, 20: { x: 420, y: 340 }
         };
         let isCorrect = true;
 
