@@ -42,13 +42,25 @@ class Scene11 extends Phaser.Scene {
             this.scaleToFitScreen(dialog);
         });
 
-        // 顯示 skip 按鈕，並確保在最上層
-        this.skipImage = this.add.image(1030, 550, 'skip').setDisplaySize(100, 50).setOrigin(0, 0).setInteractive();
-        this.skipImage.setDepth(1); // 確保 skip 按鈕在最上層
+         // 計算相對位置和縮放
+this.skipImage = this.add.image(this.scale.width * 0.93, this.scale.height * 0.93, 'skip')
+.setOrigin(0.5, 0.5) // 設置圖片的原點為中心
+.setInteractive();
 
-        // 初始化按鈕
-        this.button1 = this.add.image(650, 100, 'button1').setDisplaySize(300, 100).setOrigin(0.5, 0.5).setInteractive();
-        this.button2 = this.add.image(650, 250, 'button2').setDisplaySize(300, 100).setOrigin(0.5, 0.5).setInteractive();
+// 計算按鈕的大小，根據螢幕寬高比例進行縮放
+this.skipImage.setDisplaySize(this.scale.width * 0.1, this.scale.height * 0.08); // 按比例調整大小
+
+
+        // 初始化按鈕，使用相對位置和畫面比例縮放
+this.button1 = this.add.image(this.scale.width * 0.5, this.scale.height * 0.17, 'button1') // 按相對位置擺放
+.setOrigin(0.5, 0.5) // 設置中心為原點
+.setDisplaySize(this.scale.width * 0.2, this.scale.height * 0.12) // 按比例設定大小
+.setInteractive(); // 設置可互動
+
+this.button2 = this.add.image(this.scale.width * 0.5, this.scale.height * 0.35, 'button2') // 按相對位置擺放
+.setOrigin(0.5, 0.5) // 設置中心為原點
+.setDisplaySize(this.scale.width * 0.2, this.scale.height * 0.12) // 按比例設定大小
+.setInteractive(); // 設置可互動
         this.button1.setVisible(false).setInteractive(false);
         this.button2.setVisible(false).setInteractive(false);
 

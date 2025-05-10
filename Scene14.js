@@ -5,7 +5,7 @@ class Scene14 extends Phaser.Scene {
 
     preload() {
         this.load.image('skip', 'assets/images/skip.png');
-        this.load.image('iron', 'assets/images/iron.png'); // 加載新的 iron 圖片
+        this.load.image('iron', 'assets/images/iron.PNG'); // 加載新的 iron 圖片
         for (let i = 0; i <= 9; i++) {
             this.load.image(`number${i}`, `assets/images/number${i}.png`);
         }
@@ -30,12 +30,12 @@ class Scene14 extends Phaser.Scene {
         this.isPasswordLocked = false; // 鎖定狀態，初始為 false
 
         // 可配置的密碼位置和縮放
-        const passwordConfig = {
-            startX: this.cameras.main.width / 2.2 - 72, // 起始 X 位置
-            startY: this.cameras.main.height / 1.13, // 起始 Y 位置
-            spacing: 48, // 每個密碼之間的間距
-            scale: 0.8, // 縮放大小
-        };
+const passwordConfig = {
+    startX: this.scale.width * 0.375, // 起始 X 位置，相對於螢幕寬度的 45%
+    startY: this.scale.height * 0.88, // 起始 Y 位置，相對於螢幕高度的 88%
+    spacing: this.scale.width * 0.045, // 每個密碼之間的間距，相對於螢幕寬度的 5%
+    scale: this.scale.width * 0.001, // 縮放大小，按螢幕寬度比例設置
+};
 
         // 顯示密碼圖片
         for (let i = 0; i < 4; i++) {

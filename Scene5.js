@@ -54,8 +54,13 @@ class Scene5 extends Phaser.Scene {
         this.scaleToFitScreen(dialog1Image);
         dialog1Image.setAlpha(0);
 
-        // 顯示 skip 按鈕
-        this.skipImage = this.add.image(1030, 550, 'skip').setDisplaySize(100, 50).setOrigin(0, 0).setInteractive();
+        // 計算相對位置和縮放
+this.skipImage = this.add.image(this.scale.width * 0.93, this.scale.height * 0.93, 'skip')
+.setOrigin(0.5, 0.5) // 設置圖片的原點為中心
+.setInteractive();
+
+// 計算按鈕的大小，根據螢幕寬高比例進行縮放
+this.skipImage.setDisplaySize(this.scale.width * 0.1, this.scale.height * 0.08); // 按比例調整大小
 
         // 漸漸浮現效果
         this.tweens.add({
@@ -97,133 +102,153 @@ class Scene5 extends Phaser.Scene {
     }
 
     showMap() {
-        // 你可以調整這裡的 x 和 y 參數來更改 map 圖片的位置和大小
-        let mapImage = this.add.image(100, 30, 'map').setDisplaySize(762, 571).setOrigin(0, 0);
-
-         // 添加 rule2 圖片
-         this.rule2Image = this.add.image(290, 15, 'rule2')
-         .setOrigin(0.5, 0.5)
-         .setScale(0.8) // 可調整的 scale
-         .setDepth(10); // 設置圖層在最上層
-
+        // 顯示地圖，放置於左下角，長邊佔畫面 80%，保持比例
+        const mapImage = this.add.image(0, this.scale.height, 'map').setOrigin(0, 1); // 左下角對齊
+    
+        // 計算縮放比例，長邊佔畫面 94%，短邊留白
+        const scaleX = (this.scale.width * 0.94) / mapImage.width;
+        const scaleY = (this.scale.height * 0.94) / mapImage.height;
+        const scale = Math.min(scaleX, scaleY); // 確保原始比例不變
+        mapImage.setScale(scale);
+    
+        // 添加 rule2 圖片
+        this.rule2Image = this.add.image(this.scale.width * 0, this.scale.height * 0, 'rule2') // 左上角對齊，使用相對位置
+            .setOrigin(0, 0) // 設置圖片的原點 (origin) 為左上角
+            .setScale(0.7) // 可調整的縮放比例
+            .setDepth(10); // 設置圖層在最上層
+    
         // 正確位置的設置
         let correctPositions = {
-            'river1': { x: 550, y: 170 },
-            'river2': { x: 620, y: 160 },
-            'river3': { x: 172, y: 290 },
-            'mountain1': { x: 150, y: 390 },
-            'mountain2': { x: 720, y: 550 },
-            'mountain3': { x: 550, y: 470 },
-            'bridge1': { x: 460, y: 230 },
-            'bridge2': { x: 500, y: 200 },
-            'bridge3': { x: 410, y: 400 },
-            'bridge4': { x: 410, y: 360 },
-            'bridge5': { x: 430, y: 290 },
-            'arrow1': { x: 670, y: 80 },
-            'arrow2': { x: 840, y: 130 },
-            'arrow3': { x: 585, y: 60 },
-            'arrow4': { x: 220, y: 500 },
-            'arrow5': { x: 130, y: 100 },
-            'school1': { x: 370, y: 110 },
-            'school2': { x: 680, y: 180 },
-            'spot1': { x: 330, y: 300 },
-            'spot2': { x: 370, y: 280 },
-            'spot3': { x: 690, y:220 },
-            'spot4': { x: 635, y: 360 },
-            'spot5': { x: 230, y: 205 },
-            'spot6': { x: 195, y: 145 },
-            'spot7': { x: 475, y: 330 },
-            'spot8': { x: 723, y: 132 },
+            'river1': { x: 0.44, y: 0.283 },
+            'river2': { x: 0.5, y: 0.267 },
+            'river3': { x: 0.073, y: 0.483 },
+            'mountain1': { x: 0.041, y: 0.64 },
+            'mountain2': { x: 0.6, y: 0.917 },
+            'mountain3': { x: 0.44, y: 0.82 },
+            'bridge1': { x: 0.36, y: 0.383 },
+            'bridge2': { x: 0.39, y: 0.333 },
+            'bridge3': { x: 0.31, y: 0.64 },
+            'bridge4': { x: 0.315, y: 0.6 },
+            'bridge5': { x: 0.32, y: 0.483 },
+            'arrow1': { x: 0.56, y: 0.133 },
+            'arrow2': { x: 0.74, y: 0.217 },
+            'arrow3': { x: 0.486, y: 0.1 },
+            'arrow4': { x: 0.12, y: 0.833 },
+            'arrow5': { x: 0.03, y: 0.167 },
+            'school1': { x: 0.27, y: 0.2 },
+            'school2': { x: 0.57, y: 0.3 },
+            'spot1': { x: 0.22, y: 0.5 },
+            'spot2': { x: 0.26, y: 0.467 },
+            'spot3': { x: 0.58, y: 0.367 },
+            'spot4': { x: 0.529, y: 0.6 },
+            'spot5': { x: 0.125, y: 0.342 },
+            'spot6': { x: 0.1, y: 0.25 },
+            'spot7': { x: 0.37, y: 0.55 },
+            'spot8': { x: 0.62, y: 0.28 },
         };
-
-        // 創建 mask 圖片
-        let masks = {};
-        let correctCount = 0; // 用於計數正確放置的圖片數量
-        const totalItems = Object.keys(correctPositions).length; // 總共需要正確放置的圖片數量
-        
+    
         // 當正確配對完成時隱藏 rule2 圖片
         const onComplete = () => {
             if (correctCount === totalItems) {
                 this.rule2Image.setVisible(false); // 隱藏 rule2
             }
         };
-
+    
+        // 創建 mask 圖片
+        let masks = {};
+        let correctCount = 0; // 用於計數正確放置的圖片數量
+        const totalItems = Object.keys(correctPositions).length; // 總共需要正確放置的圖片數量
+    
         for (let key in correctPositions) {
             let pos = correctPositions[key];
-            masks[key] = this.add.image(pos.x, pos.y - 10, 'mask').setOrigin(0.5, 0.5).setAlpha(0.5);
+            // 計算基於螢幕的絕對座標
+            const absoluteX = this.scale.width * pos.x;
+            const absoluteY = this.scale.height * pos.y;
+    
+            // 創建 mask 圖片，放置在正確位置
+            masks[key] = this.add.image(absoluteX, absoluteY, 'mask')
+                .setOrigin(0.5, 0.5)
+                .setAlpha(0.5);
         }
 
-        // 創建可拖曳的圖片
-        let draggableItems = [
-            { key: 'river1', x: 900, y: 80, scale: 0.5 },
-            { key: 'river2', x: 900, y: 140, scale: 0.5 },
-            { key: 'river3', x: 900, y: 200, scale: 0.5 },
-            { key: 'mountain1', x: 900, y: 260, scale: 0.5 },
-            { key: 'mountain2', x: 900, y: 320, scale: 0.5 },
-            { key: 'mountain3', x: 900, y: 380, scale: 0.5 },
-            { key: 'bridge1', x: 900, y: 440, scale: 0.5 },
-            { key: 'bridge2', x: 900, y: 500, scale: 0.5 },
-            { key: 'bridge3', x: 900, y: 560, scale: 0.5 },
-            { key: 'bridge4', x: 1050, y: 80, scale: 0.5 },
-            { key: 'bridge5', x: 1050, y: 140, scale: 0.5 },
-            { key: 'arrow1', x: 1050, y: 200, scale: 0.5 },
-            { key: 'arrow2', x: 1050, y: 260, scale: 0.5 },
-            { key: 'arrow3', x: 1050, y: 320, scale: 0.5 },
-            { key: 'arrow4', x: 1050, y: 380, scale: 0.5 },
-            { key: 'arrow5', x: 1050, y: 440, scale: 0.5 },
-            { key: 'school1', x: 1050, y: 500, scale: 0.5 },
-            { key: 'school2', x: 1050, y: 560, scale: 0.5 },
-            { key: 'spot1', x: 1200, y: 80, scale: 0.5 },
-            { key: 'spot2', x: 1200, y: 140, scale: 0.5 },
-            { key: 'spot3', x: 1200, y: 200, scale: 0.5 },
-            { key: 'spot4', x: 1200, y: 260, scale: 0.5 },
-            { key: 'spot5', x: 1200, y: 320, scale: 0.5 },
-            { key: 'spot6', x: 1200, y: 380, scale: 0.5 },
-            { key: 'spot7', x: 1200, y: 440, scale: 0.5 },
-            { key: 'spot8', x: 1200, y: 500, scale: 0.5 },
-        ];
+       // 創建可拖曳的圖片
+const draggableItems = [
+    { key: 'river1', x: 0.82, y: 0.1, scale: 0.5 },
+    { key: 'river2', x: 0.82, y: 0.17, scale: 0.5 },
+    { key: 'river3', x: 0.82, y: 0.24, scale: 0.5 },
+    { key: 'mountain1', x: 0.82, y: 0.31, scale: 0.5 },
+    { key: 'mountain2', x: 0.82, y: 0.38, scale: 0.5 },
+    { key: 'mountain3', x: 0.82, y: 0.45, scale: 0.5 },
+    { key: 'bridge1', x: 0.82, y: 0.52, scale: 0.5 },
+    { key: 'bridge2', x: 0.82, y: 0.59, scale: 0.5 },
+    { key: 'bridge3', x: 0.82, y: 0.66, scale: 0.5 },
+    { key: 'bridge4', x: 0.82, y: 0.73, scale: 0.5 },
+    { key: 'bridge5', x: 0.82, y: 0.8, scale: 0.5 },
+    { key: 'arrow1', x: 0.82, y: 0.87, scale: 0.5 },
+    { key: 'arrow2', x: 0.82, y: 0.94, scale: 0.5 },
+    { key: 'arrow3', x: 0.92, y: 0.1, scale: 0.5 },
+    { key: 'arrow4', x: 0.92, y: 0.17, scale: 0.5 },
+    { key: 'arrow5', x: 0.92, y: 0.24, scale: 0.5 },
+    { key: 'school1', x: 0.92, y: 0.31, scale: 0.5 },
+    { key: 'school2', x: 0.92, y: 0.38, scale: 0.5 },
+    { key: 'spot1', x: 0.92, y: 0.45, scale: 0.5 },
+    { key: 'spot2', x: 0.92, y: 0.52, scale: 0.5 },
+    { key: 'spot3', x: 0.92, y: 0.59, scale: 0.5 },
+    { key: 'spot4', x: 0.92, y: 0.66, scale: 0.5 },
+    { key: 'spot5', x: 0.92, y: 0.73, scale: 0.5 },
+    { key: 'spot6', x: 0.92, y: 0.8, scale: 0.5 },
+    { key: 'spot7', x: 0.92, y: 0.87, scale: 0.5 },
+    { key: 'spot8', x: 0.92, y: 0.94, scale: 0.5 },
+];
 
-        draggableItems.forEach(item => {
-            // 創建原始位置記錄
-            let originalX = item.x;
-            let originalY = item.y;
+draggableItems.forEach(item => {
+    // 計算圖片絕對初始位置
+    let originalX = this.scale.width * item.x;
+    let originalY = this.scale.height * item.y;
 
-            let image = this.add.image(item.x, item.y, item.key).setScale(item.scale).setInteractive();
-            this.input.setDraggable(image);
+    // 創建圖片
+    let image = this.add.image(originalX, originalY, item.key).setScale(item.scale).setOrigin(0.5, 0.5).setInteractive();
+    this.input.setDraggable(image);
 
-            image.on('dragstart', () => {
-                this.skipImage.setVisible(false); // 隱藏 skip 按鈕
-            });
+    // 拖曳事件
+    image.on('dragstart', () => {
+        this.skipImage.setVisible(false); // 隱藏 skip 按鈕
+    });
 
-            image.on('drag', (pointer, dragX, dragY) => {
-                image.x = dragX;
-                image.y = dragY;
-            });
+    image.on('drag', (pointer, dragX, dragY) => {
+        image.x = dragX;
+        image.y = dragY;
+    });
 
-            image.on('dragend', (pointer, dragX, dragY) => {
-                let correctPosition = correctPositions[item.key];
-                let mask = masks[item.key];
-                // 使用Phaser的物理系統進行重疊檢測
-                if (Phaser.Geom.Intersects.RectangleToRectangle(image.getBounds(), mask.getBounds())) {
-                    // 創建一個新的圖片顯示在正確位置
-                    let placedImage = this.add.image(correctPosition.x, correctPosition.y, item.key).setScale(item.scale);
-                    // 銷毀拖動的圖片和 mask
-                    image.destroy();
-                    mask.destroy();
-                    correctCount++; // 增加正確放置的圖片數量
-                    this.playSound('correct'); // 播放正確音效
-                    // 檢查是否所有圖片都已正確放置
-                    if (correctCount === totalItems) {
-                        this.skipImage.setVisible(true); // 顯示 skip 按鈕
-                    }
-                } else {
-                    // 將圖片位置設置回原始位置
-                    image.x = originalX;
-                    image.y = originalY;
-                    this.playSound('wrong'); // 播放錯誤音效
-                }
-            });
-        });
+    image.on('dragend', (pointer, dragX, dragY) => {
+        let correctPosition = correctPositions[item.key];
+        let mask = masks[item.key];
+
+        // 計算正確位置的絕對座標
+        const correctX = this.scale.width * correctPosition.x;
+        const correctY = this.scale.height * correctPosition.y;
+
+        // 使用 Phaser 的物理系統進行重疊檢測
+        if (Phaser.Geom.Intersects.RectangleToRectangle(image.getBounds(), mask.getBounds())) {
+            // 吸附到正確位置
+            image.x = correctX;
+            image.y = correctY;
+            correctCount++; // 增加正確放置的圖片數量
+            this.playSound('correct'); // 播放正確音效
+
+            // 檢查是否所有圖片都已正確放置
+            if (correctCount === totalItems) {
+                this.skipImage.setVisible(true); // 顯示 skip 按鈕
+                onComplete(); // 呼叫完成函數
+            }
+        } else {
+            // 恢復到原始位置
+            image.x = originalX;
+            image.y = originalY;
+            this.playSound('wrong'); // 播放錯誤音效
+        }
+    });
+});
 
         this.skipImage.on('pointerdown', () => {
             this.scene.start('Scene6'); // 切換到 Scene6

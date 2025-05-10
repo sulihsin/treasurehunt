@@ -16,7 +16,7 @@ class Scene10 extends Phaser.Scene {
 
     create() {
         // 播放背景音樂並設置為循環播放
-        this.gameBGM = this.sound.add('gameBGM', {volume: 1.5, loop: true });
+        this.gameBGM = this.sound.add('gameBGM', {volume: 1.2, loop: true });
         this.gameBGM.play();
 
         // 添加背景圖片
@@ -28,8 +28,8 @@ class Scene10 extends Phaser.Scene {
         this.currentSet = 1;
         this.totalSets = 2;
         this.currentCorrectCount = 0;
-        this.plantSound = this.sound.add('plant'); // 創建正確答案音效對象
-        this.wrongSound = this.sound.add('wrong'); // 創建錯誤答案音效對象
+        this.plantSound = this.sound.add('plant', {volume: 3}); // 創建正確答案音效對象
+        this.wrongSound = this.sound.add('wrong', {volume: 0.3}); // 創建錯誤答案音效對象
         this.showFlowers();
     }
 
@@ -113,10 +113,14 @@ class Scene10 extends Phaser.Scene {
     }
 
     showSkipButton() {
-        const skipButton = this.add.image(1030, 550, 'skip').setInteractive();
+        const skipButton = this.add.image(this.scale.width * 0.93, this.scale.height * 0.93, 'skip') // 使用相對位置
+            .setOrigin(0.5, 0.5) // 設置按鈕的原點為中心
+            .setDisplaySize(this.scale.width * 0.1, this.scale.height * 0.08) // 按比例調整大小
+            .setInteractive(); // 設置可互動
+    
         skipButton.on('pointerdown', () => {
             this.gameBGM.stop(); // 停止背景音樂
-            this.scene.start('Scene11');
+            this.scene.start('Scene11'); // 切換到 Scene11
         });
     }
 

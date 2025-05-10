@@ -71,11 +71,11 @@ class Scene12 extends Phaser.Scene {
         }
 
         // 隱藏跳關按鈕，等拼圖完成後顯示
-        this.skipImage = this.add.image(1030, 550, 'skip')
-            .setDisplaySize(100, 50)
-            .setOrigin(0, 0)
-            .setInteractive()
-            .setVisible(false);
+this.skipImage = this.add.image(this.scale.width * 0.93, this.scale.height * 0.93, 'skip') // 使用相對位置
+.setDisplaySize(this.scale.width * 0.1, this.scale.height * 0.08) // 按比例縮放
+.setOrigin(0.5, 0.5) // 設置中心為原點
+.setInteractive()
+.setVisible(false);
 
         this.skipImage.on('pointerdown', () => {
             // 停止背景音樂
@@ -89,13 +89,13 @@ class Scene12 extends Phaser.Scene {
             const dialog = this.add.image(centerX, centerY, 'dialog251').setOrigin(0.5);
             this.scaleToFitScreen(dialog);
 
-            // 延遲 2 秒後顯示 backtoschool 按鈕
-            this.time.delayedCall(2000, () => {
-                const backToSchoolButton = this.add.image(centerX, centerY + 200, 'backtoschool')
-                    .setOrigin(0.5)
-                    .setDisplaySize(180, 60) // 設置按鈕大小
-                    .setInteractive()
-                    .setDepth(1); // 放在最上層
+            // 延遲 1.5 秒後顯示 backtoschool 按鈕
+this.time.delayedCall(1500, () => {
+    const backToSchoolButton = this.add.image(this.scale.width * 0.5, this.scale.height * 0.7, 'backtoschool') // 使用相對位置
+        .setOrigin(0.5, 0.5) // 設置中心為原點
+        .setDisplaySize(this.scale.width * 0.15, this.scale.height * 0.1) // 按比例縮放大小
+        .setInteractive() // 設置可互動
+        .setDepth(1); // 放在最上層
 
                 backToSchoolButton.on('pointerdown', () => {
                     this.scene.start('Scene13'); // 跳轉到下一關
@@ -133,7 +133,7 @@ class Scene12 extends Phaser.Scene {
             });
 
             // 延遲 10 秒後顯示跳關按鈕
-            this.time.delayedCall(10000, () => {
+            this.time.delayedCall(8000, () => {
                 this.skipImage.setVisible(true); // 顯示跳關按鈕
             });
         }
