@@ -21,7 +21,7 @@ const config = {
     width: 1000,
     height: 600,
     parent: 'game-container',
-    scene: [Scene14, Scene15, Scene16, Scene17],
+    scene: [Scene4, Scene5, Scene6, Scene1, Scene7, Scene2, Scene8, Scene9, Scene10, Scene11, Scene12, Scene13, Scene14, Scene15, Scene16, Scene17],
     pixelArt: false,
     antialias: true,
     backgroundColor: '#ffffff',
