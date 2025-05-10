@@ -86,20 +86,24 @@ const passwordConfig = {
         // 播放 ling.mp3 音效
         this.sound.play('ling', { volume: 0.5 });
 
-        // 顯示密碼正確提示
-        let successText = this.add.text(600, 400, '密碼正確！', {
-            fontSize: '28px',
-            color: '#00FF00',
-            fontStyle: 'bold',
-            align: 'center',
-            backgroundColor: '#000000', // 添加背景色
-            padding: {
-                top: 10,
-                bottom: 10,
-                left: 10,
-                right: 10,
-            }, // 增加內邊距
-        }).setOrigin(0.5, 0.5);
+       // 顯示密碼正確提示
+let successText = this.add.text(
+    this.scale.width * 0.5, // 畫面寬度的 50%（中心位置）
+    this.scale.height * 0.5, // 畫面高度的 50%（中心位置）
+    '密碼正確！', {
+        fontSize: `${this.scale.width * 0.04}px`, // 文字大小按畫面寬度的 5% 動態設定
+        color: '#00FF00',
+        fontStyle: 'bold',
+        align: 'center',
+        backgroundColor: '#000000', // 添加背景色
+        padding: {
+            top: this.scale.height * 0.01, // 上方內邊距按畫面高度的 1% 設定
+            bottom: this.scale.height * 0.01, // 下方內邊距按畫面高度的 1% 設定
+            left: this.scale.width * 0.02, // 左方內邊距按畫面寬度的 2% 設定
+            right: this.scale.width * 0.01, // 右方內邊距按畫面寬度的 2% 設定
+        }, // 增加內邊距
+    }
+).setOrigin(0.5, 0.5); // 設定原點為中心
 
         // 確保文字顯示在場景的最上層
         successText.setDepth(10);

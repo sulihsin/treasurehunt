@@ -16,7 +16,7 @@ class Scene10 extends Phaser.Scene {
 
     create() {
         // 播放背景音樂並設置為循環播放
-        this.gameBGM = this.sound.add('gameBGM', {volume: 1.2, loop: true });
+        this.gameBGM = this.sound.add('gameBGM', { volume: 1.2, loop: true });
         this.gameBGM.play();
 
         // 添加背景圖片
@@ -28,8 +28,8 @@ class Scene10 extends Phaser.Scene {
         this.currentSet = 1;
         this.totalSets = 2;
         this.currentCorrectCount = 0;
-        this.plantSound = this.sound.add('plant', {volume: 3}); // 創建正確答案音效對象
-        this.wrongSound = this.sound.add('wrong', {volume: 0.3}); // 創建錯誤答案音效對象
+        this.plantSound = this.sound.add('plant', { volume: 3 }); // 創建正確答案音效對象
+        this.wrongSound = this.sound.add('wrong', { volume: 0.3 }); // 創建錯誤答案音效對象
         this.showFlowers();
     }
 
@@ -47,7 +47,7 @@ class Scene10 extends Phaser.Scene {
         const additionalStart = 21; // 新增的錯誤選項從 flower21 開始
         const additionalEnd = additionalStart + this.currentSet * 5 - 1; // 每輪新增 5 個錯誤選項
         this.flowerImages = [];
-        
+
         for (let i = start; i <= end; i++) {
             this.createFlower(i);
         }
@@ -70,13 +70,15 @@ class Scene10 extends Phaser.Scene {
                 }
             }
         } while (overlap);
-        
+
         flower = this.add.image(x, y, `flower${index}`).setInteractive();
         flower.correct = this.correctAnswers.has(index);
+        flower.clicked = false; // 新增屬性，標記正確的花是否已被點擊過
         flower.on('pointerdown', () => {
-            if (flower.correct) {
+            if (flower.correct && !flower.clicked) { // 確保正確的花僅能被按一次
+                flower.clicked = true; // 標記正確的花為已被點擊
                 this.handleCorrectAnswer(flower);
-            } else {
+            } else if (!flower.correct) { // 錯誤的花保持原邏輯
                 this.playSound('wrong'); // 播放錯誤答案音效
             }
         });
@@ -117,7 +119,7 @@ class Scene10 extends Phaser.Scene {
             .setOrigin(0.5, 0.5) // 設置按鈕的原點為中心
             .setDisplaySize(this.scale.width * 0.1, this.scale.height * 0.08) // 按比例調整大小
             .setInteractive(); // 設置可互動
-    
+
         skipButton.on('pointerdown', () => {
             this.gameBGM.stop(); // 停止背景音樂
             this.scene.start('Scene11'); // 切換到 Scene11

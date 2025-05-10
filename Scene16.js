@@ -87,19 +87,23 @@ class Scene16 extends Phaser.Scene {
         this.sound.play('ling', { volume: 0.5 });
 
         // 顯示密碼正確提示
-        let successText = this.add.text(630, 400, '密碼正確！', {
-            fontSize: '28px',
-            color: '#00FF00',
-            fontStyle: 'bold',
-            align: 'center', // 確保文字對齊
-            backgroundColor: '#000000', // 添加背景色以便更清晰
-            padding: {
-                top: 10,
-                bottom: 10,
-                left: 10,
-                right: 10,
-            }, // 增加內邊距避免文字被裁剪
-        }).setOrigin(0.5, 0.5);
+let successText = this.add.text(
+    this.scale.width * 0.5, // 畫面寬度的 50%（相對水平位置）
+    this.scale.height * 0.5, // 畫面高度的 50%（相對垂直位置）
+    '密碼正確！', {
+        fontSize: `${this.scale.width * 0.04}px`, // 按畫面寬度的 4% 設定字體大小
+        color: '#00FF00',
+        fontStyle: 'bold',
+        align: 'center', // 確保文字對齊
+        backgroundColor: '#000000', // 添加背景色以便更清晰
+        padding: {
+            top: this.scale.height * 0.01, // 內邊距按畫面高度的 1% 設定
+            bottom: this.scale.height * 0.01,
+            left: this.scale.width * 0.02, // 內邊距按畫面寬度的 2% 設定
+            right: this.scale.width * 0.01,
+        }, // 增加內邊距避免文字被裁剪
+    }
+).setOrigin(0.5, 0.5); // 設定原點為中心，確保文字以中心對齊
     
         // 確保文字顯示在場景的最上層
         successText.setDepth(10);

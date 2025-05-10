@@ -110,7 +110,6 @@ this.digButton.on('pointerdown', () => {
     }
 
     if (this.digCount >= 100) {
-        this.sound.stopAll(); // 停止所有當前音效
         this.kinSound.play({ volume: 1.2 }); // 播放寶箱音效
         this.showNextDialog();
             }
