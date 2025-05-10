@@ -207,7 +207,10 @@ draggableItems.forEach(item => {
     let originalY = this.scale.height * item.y;
 
     // 創建圖片
-    let image = this.add.image(originalX, originalY, item.key).setScale(item.scale).setOrigin(0.5, 0.5).setInteractive();
+    let image = this.add.image(originalX, originalY, item.key)
+        .setScale(item.scale)
+        .setOrigin(0.5, 0.5)
+        .setInteractive();
     this.input.setDraggable(image);
 
     // 拖曳事件
@@ -235,6 +238,12 @@ draggableItems.forEach(item => {
             image.y = correctY;
             correctCount++; // 增加正確放置的圖片數量
             this.playSound('correct'); // 播放正確音效
+
+            // 禁用該圖片的拖曳功能
+            image.disableInteractive();
+
+            // 隱藏對應的 mask
+            mask.setVisible(false);
 
             // 檢查是否所有圖片都已正確放置
             if (correctCount === totalItems) {

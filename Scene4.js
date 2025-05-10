@@ -5,25 +5,38 @@ class Scene4 extends Phaser.Scene {
 
     preload() {
         // 加載需要的資源
-        this.load.image('cover', 'assets/images/cover.PNG');
+        this.load.image('cover', 'assets/images/cover2.png');
         this.load.image('dialog0', 'assets/images/dialog0.png');
         this.load.image('startbutton', 'assets/images/startbutton.png');
         this.load.audio('gameBGM', 'assets/audio/gameBGM.mp3'); // 加載背景音樂
     }
 
     create() {
-        // 播放背景音樂並設定為循環
-        const bgm = this.sound.add('gameBGM', { volume: 1.5, loop: true });
-        bgm.play();
-
         // 添加 cover 圖片，並按照原比例縮放到螢幕大小（短邊留白）
         const coverImage = this.add.image(this.scale.width * 0.5, this.scale.height * 0.5, 'cover').setOrigin(0.5, 0.5);
         const scale = Math.min(this.scale.width / coverImage.width, this.scale.height / coverImage.height); // 計算縮放比例
         coverImage.setScale(scale); // 按比例縮放
 
-        // 等待 3 秒後讓玩家點擊任意地方跳轉到 dialog0
-        this.time.delayedCall(3000, () => {
-            this.input.once('pointerdown', () => {
+        // 播放背景音樂並設定為循環
+        const bgm = this.sound.add('gameBGM', { volume: 1.5, loop: true });
+
+        let clickCount = 0; // 記錄點擊次數
+        let canClickAgain = true; // 控制是否允許第二次點擊
+
+        // 等待用戶點擊
+        this.input.on('pointerdown', () => {
+            if (clickCount === 0 && canClickAgain) {
+                // 第一次點擊：播放背景音樂
+                bgm.play();
+                clickCount++;
+                canClickAgain = false; // 禁止立即點擊第二次
+
+                // 3秒後允許再次點擊
+                this.time.delayedCall(3000, () => {
+                    canClickAgain = true;
+                });
+            } else if (clickCount === 1 && canClickAgain) {
+                // 第二次點擊：進入下一步
                 coverImage.setVisible(false); // 隱藏 cover 圖片
 
                 // 顯示 dialog0 圖片，保持原始比例縮放到適配螢幕（短邊留白）
@@ -35,8 +48,8 @@ class Scene4 extends Phaser.Scene {
                 const startButton = this.add.image(this.scale.width * 0.5, this.scale.height * 0.9, 'startbutton')
                     .setOrigin(0.5, 0.5)
                     .setInteractive();
-                const buttonWidth = this.scale.width * 0.12; // 按鈕寬度為螢幕寬度的 25%
-                const buttonHeight = buttonWidth * 0.33; // 按鈕高度按圖片比例縮放 (假設圖片寬高比約為 2.5:1)
+                const buttonWidth = this.scale.width * 0.12; // 按鈕寬度為螢幕寬度的 12%
+                const buttonHeight = buttonWidth * 0.35; // 按鈕高度按圖片比例縮放 (假設圖片寬高比約為 3:1)
                 startButton.setDisplaySize(buttonWidth, buttonHeight);
 
                 // 添加 start 按鈕點擊事件
@@ -44,7 +57,7 @@ class Scene4 extends Phaser.Scene {
                     bgm.stop(); // 切換場景時停止背景音樂
                     this.scene.start('Scene5'); // 切換到 Scene5
                 });
-            });
+            }
         });
     }
 }
