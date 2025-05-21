@@ -17,6 +17,17 @@ class Scene13 extends Phaser.Scene {
     }
 
     create() {
+        window.onerror = (msg, url, lineNo, columnNo, error) => {
+            console.error('Scene error, restarting scene:', msg, url, lineNo, columnNo, error);
+            this.scene.restart();  // 重新啟動目前這個場景
+            return true; // 阻止預設跳回首頁
+        };
+        
+        // Promise rejection 也要處理
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Scene unhandled rejection, restarting scene:', event.reason);
+            this.scene.restart();
+        });
         // 播放背景音樂並設置為循環播放
         this.gameBGM = this.sound.add('gameBGM', { volume: 1.2, loop: true });
         this.gameBGM.play();
